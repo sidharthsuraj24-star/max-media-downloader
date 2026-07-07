@@ -1,22 +1,40 @@
-# Max Media Downloader — Backend
+# Max Media Downloader
 
-A real Flask backend for the Max Media Downloader frontend. Uses **yt-dlp** to
-fetch video/audio from YouTube, Vimeo, Twitter/X, Instagram, TikTok, SoundCloud,
-Facebook, Twitch, and 1000+ other sites, with optional **ffmpeg**-based audio
-extraction/conversion (MP3, AAC, FLAC, WAV, M4A, etc).
+A Python Flask web application that provides a browser-based interface for downloading video and audio from supported platforms using **yt-dlp**.
 
-## 1. Install dependencies
+## Features
+
+- Browser-based user interface
+- Video and audio downloads
+- Multiple output formats
+- Download progress tracking
+- File management
+- yt-dlp integration
+- Flask backend
+
+## Technologies
+
+- Python
+- Flask
+- HTML
+- CSS
+- JavaScript
+- yt-dlp
+- FFmpeg
+
+---
+
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Also install **ffmpeg** (required for audio extraction / format conversion):
+Install **FFmpeg** (required for audio extraction and format conversion):
 
-- **Windows:** `winget install ffmpeg` (or download from ffmpeg.org and add to PATH)
+- **Windows:** `winget install ffmpeg`
 - **macOS:** `brew install ffmpeg`
 - **Linux:** `sudo apt install ffmpeg`
-
 ## 2. Run the server
 
 ```bash
