@@ -57,6 +57,9 @@ else:
 # ── Config ───────────────────────────────────────────────────────────────────
 DOWNLOAD_DIR = os.path.join(tempfile.gettempdir(), "max_media_downloads")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+# Upper bound per download (MB); 0 disables. Keeps small hosts from filling disk.
+MAX_FILESIZE_MB = int(os.environ.get("MAX_FILESIZE_MB", "0") or 0)
+JOB_TTL_SECONDS = int(os.environ.get("JOB_TTL_SECONDS", "300") or 300)
 
 # Track active jobs:  job_id -> {status, progress, filename, error, filepath}
 JOBS: dict[str, dict] = {}
@@ -154,6 +157,8 @@ def build_ydl_opts(dl_type: str, quality: str, fmt: str,
         "no_warnings": True,
         "noplaylist": True,
     }
+    if MAX_FILESIZE_MB > 0:
+        opts["max_filesize"] = MAX_FILESIZE_MB * 1024 * 1024
 
     if format_id and dl_type == "video":
         container = fmt if fmt else "mp4"
@@ -169,7 +174,9 @@ def build_ydl_opts(dl_type: str, quality: str, fmt: str,
         # Extract best audio and transcode
         afmt = audio_fmt if audio_fmt else "mp3"
         abr  = audio_quality if audio_quality else "192"
-        opts["format"] = "bestaudio/best"
+        # Prefer audio-only; otherwise a small muxed stream instead of the
+        # largest one (avoids pulling multi-GB 4K files just for audio).
+        opts["format"] = "bestaudio/best[height<=480]/worst[acodec!=none]/best"
         opts["postprocessors"] = [{
             "key": "FFmpegExtractAudio",
             "preferredcodec": afmt,
@@ -221,6 +228,8 @@ def download_worker(job_id: str, url: str, opts: dict):
         if not files:
             raise RuntimeError("Download completed but no output file found.")
 
+        # Pick the largest finished file (the final output, not leftovers)
+        files.sort(key=lambda f: os.path.getsize(os.path.join(out_dir, f)), reverse=True)
         filepath = os.path.join(out_dir, files[0])
         filename = files[0]
 
@@ -233,7 +242,7 @@ def download_worker(job_id: str, url: str, opts: dict):
             })
 
         # Auto-clean after 5 minutes
-        cleanup_job(job_id, delay=300)
+        cleanup_job(job_id, delay=JOB_TTL_SECONDS)
 
     except Exception as exc:
         with JOBS_LOCK:
@@ -242,6 +251,9 @@ def download_worker(job_id: str, url: str, opts: dict):
                     "status": "error",
                     "error": clean_error_message(exc),
                 })
+        # Remove partial files now; drop the job record after the TTL
+        shutil.rmtree(out_dir, ignore_errors=True)
+        cleanup_job(job_id, delay=JOB_TTL_SECONDS)
 
 
 # ════════════════════════════════════════════════════════════════════════════
