@@ -1,3 +1,5 @@
-flask>=3.0
-flask-cors>=4.0
-yt-dlp>=2024.1.1
+flask~=3.1
+flask-cors~=6.0
+gunicorn~=23.0
+# yt-dlp must track site changes, so only a floor is set; rebuild to update.
+yt-dlp>=2026.8.19

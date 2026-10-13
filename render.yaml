@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: max-media-downloader
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: MAX_FILESIZE_MB
+        value: "500"
+      - key: JOB_TTL_SECONDS
+        value: "300"
