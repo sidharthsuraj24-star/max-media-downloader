@@ -79,3 +79,16 @@ completion to avoid disk buildup.
   `pip install -U yt-dlp`.
 - This tool is for personal use on content you have rights to download —
   respect copyright and each platform's terms of service.
+
+## Deploy on Render (free)
+
+This repo includes a `Dockerfile` (Python slim + FFmpeg + gunicorn) and a `render.yaml` blueprint.
+
+1. In Render: **New > Blueprint**, connect this GitHub repo, and apply `render.yaml`
+   (or **New > Web Service**, pick this repo, Runtime **Docker**, plan **Free**, health check path `/api/health`).
+2. Optional env vars: `MAX_FILESIZE_MB` (default 500, `0` = no limit), `JOB_TTL_SECONDS` (default 300).
+
+The server runs a single gunicorn worker with threads, because download jobs are tracked in memory.
+Free instances sleep when idle and have ephemeral disk, so finished files are only kept for a few minutes.
+
+Only download content you have the rights to; downloading from some platforms may violate their Terms of Service.
