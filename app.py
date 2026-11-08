@@ -60,6 +60,20 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 # Upper bound per download (MB); 0 disables. Keeps small hosts from filling disk.
 MAX_FILESIZE_MB = int(os.environ.get("MAX_FILESIZE_MB", "0") or 0)
 JOB_TTL_SECONDS = int(os.environ.get("JOB_TTL_SECONDS", "300") or 300)
+# Login-walled sites (Instagram, TikTok, Facebook...) refuse anonymous access.
+# COOKIEFILE: path to a Netscape cookies.txt exported from your browser.
+# COOKIES_FROM_BROWSER: browser name (chrome|firefox|chromium|edge|safari|brave)
+# for local runs; reads cookies straight from that browser's profile.
+COOKIEFILE = os.environ.get("COOKIEFILE", "").strip()
+COOKIES_FROM_BROWSER = os.environ.get("COOKIES_FROM_BROWSER", "").strip()
+# COOKIES_CONTENT: the full cookies.txt text pasted into an env var (Render has
+# no file upload). Literal newlines or \n escapes both work.
+COOKIES_CONTENT = os.environ.get("COOKIES_CONTENT", "").strip()
+if COOKIES_CONTENT and not COOKIEFILE:
+    _cookie_path = os.path.join(DOWNLOAD_DIR, "cookies.txt")
+    with open(_cookie_path, "w") as _f:
+        _f.write(COOKIES_CONTENT.replace("\\n", "\n") + "\n")
+    COOKIEFILE = _cookie_path
 
 # Track active jobs:  job_id -> {status, progress, filename, error, filepath}
 JOBS: dict[str, dict] = {}
@@ -159,6 +173,10 @@ def build_ydl_opts(dl_type: str, quality: str, fmt: str,
     }
     if MAX_FILESIZE_MB > 0:
         opts["max_filesize"] = MAX_FILESIZE_MB * 1024 * 1024
+    if COOKIEFILE:
+        opts["cookiefile"] = COOKIEFILE
+    elif COOKIES_FROM_BROWSER:
+        opts["cookiesfrombrowser"] = (COOKIES_FROM_BROWSER,)
 
     if format_id and dl_type == "video":
         container = fmt if fmt else "mp4"
