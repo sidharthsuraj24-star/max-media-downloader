@@ -80,6 +80,25 @@ completion to avoid disk buildup.
 - This tool is for personal use on content you have rights to download —
   respect copyright and each platform's terms of service.
 
+## 5. Cookies for login-walled sites (Instagram, TikTok, Facebook...)
+
+Instagram and similar platforms refuse anonymous access entirely, so downloads
+fail with an "empty media response" or login error unless the server passes
+your logged-in cookies. The backend supports three ways to provide them:
+
+- **Local runs (easiest):** set `COOKIES_FROM_BROWSER=chrome` (or `firefox`,
+  `edge`, `brave`) and start the app. yt-dlp reads cookies straight from that
+  browser's profile. The browser must be signed in to the site.
+- **Cookie file:** export a cookies.txt with a browser extension such as
+  "Get cookies.txt LOCALLY", then set `COOKIEFILE=/path/to/cookies.txt`.
+- **Render / hosted:** there is no file upload, so paste the full cookies.txt
+  text into a `COOKIES_CONTENT` environment variable (Render dashboard → your
+  service → Environment) and redeploy. Literal newlines or `\n` escapes both
+  work.
+
+Cookies expire when the site rotates your session; re-export or refresh them
+if login-walled downloads start failing again.
+
 ## Deploy on Render (free)
 
 This repo includes a `Dockerfile` (Python slim + FFmpeg + gunicorn) and a `render.yaml` blueprint.
