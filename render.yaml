@@ -11,3 +11,5 @@ services:
         value: "500"
       - key: JOB_TTL_SECONDS
         value: "300"
+      - key: MAX_ACTIVE_JOBS
+        value: "2"

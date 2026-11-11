@@ -1,6 +1,6 @@
 # Max Media Downloader
 
-A Python Flask web application that provides a browser-based interface for downloading video and audio from supported platforms using **yt-dlp**.
+A Python Flask web application that provides a browser-based interface for downloading **openly licensed** video and audio (Wikimedia Commons, Internet Archive CC / public-domain items, or domains you own) using **yt-dlp**. YouTube, X and other platforms whose terms forbid downloading are refused.
 
 ## Features
 
@@ -47,8 +47,7 @@ from the `static/` folder, and it talks to the API on the same origin.
 For production, use a real WSGI server instead of the dev server:
 
 ```bash
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
+gunicorn app:app --workers 1 --threads 8 --timeout 0 -b 0.0.0.0:5000
 ```
 
 ## 3. How it works
@@ -71,33 +70,44 @@ live % → on completion, the browser auto-downloads from `/api/file/<id>`.
 Files are written to a temp directory and **auto-deleted 5 minutes** after
 completion to avoid disk buildup.
 
-## 4. Notes / limitations
+## 4. Compliant mode (sources policy)
 
-- Some sites (Instagram, TikTok, Facebook) require login cookies for private
-  or rate-limited content — pass `cookiefile` in `build_ydl_opts()` if needed.
-- yt-dlp is updated frequently as sites change; keep it current with
-  `pip install -U yt-dlp`.
-- This tool is for personal use on content you have rights to download —
-  respect copyright and each platform's terms of service.
+The server only downloads media it is allowed to redistribute:
 
-## 5. Cookies for login-walled sites (Instagram, TikTok, Facebook...)
+| Source | Rule |
+|---|---|
+| Wikimedia Commons (`commons.wikimedia.org`, `upload.wikimedia.org`) | Allowed; Commons only hosts freely licensed media. |
+| Internet Archive (`archive.org`) | Allowed only when the item's `licenseurl` is Creative Commons or public domain (checked via `archive.org/metadata/<id>`). Set `REQUIRE_OPEN_LICENSE=0` to skip the check for items you own. |
+| Your own domains | Add them to `ALLOWED_DOMAINS` (comma separated, subdomains included). |
+| YouTube, X/Twitter, Instagram, TikTok, Facebook | Always refused with a message explaining why (their Terms of Service prohibit downloading). They cannot be re-enabled via `ALLOWED_DOMAINS`. |
+| Everything else | Refused: "not on the allowed list". |
 
-Instagram and similar platforms refuse anonymous access entirely, so downloads
-fail with an "empty media response" or login error unless the server passes
-your logged-in cookies. The backend supports three ways to provide them:
+Safety checks applied to the pasted URL **and** every media URL yt-dlp
+resolves from it: http(s) only, ports 80/443 only, no raw IPs, no embedded
+credentials, and the host must resolve to a public address (blocks SSRF to
+localhost, cloud metadata or private networks). Playlists/collections are
+refused (paste a single file). Client-supplied format ids and options are
+validated against fixed lists, so nothing user-controlled reaches yt-dlp's
+format language or ffmpeg arguments.
 
-- **Local runs (easiest):** set `COOKIES_FROM_BROWSER=chrome` (or `firefox`,
-  `edge`, `brave`) and start the app. yt-dlp reads cookies straight from that
-  browser's profile. The browser must be signed in to the site.
-- **Cookie file:** export a cookies.txt with a browser extension such as
-  "Get cookies.txt LOCALLY", then set `COOKIEFILE=/path/to/cookies.txt`.
-- **Render / hosted:** there is no file upload, so paste the full cookies.txt
-  text into a `COOKIES_CONTENT` environment variable (Render dashboard → your
-  service → Environment) and redeploy. Literal newlines or `\n` escapes both
-  work.
+Limits: `MAX_FILESIZE_MB` (default 500, enforced before and during download),
+`MAX_ACTIVE_JOBS` (default 2, extra requests get HTTP 429),
+`MAX_DURATION_SECONDS` (default 3 h), `JOB_TTL_SECONDS` (default 300, files
+and job records are deleted after this; a janitor runs every minute and the
+temp dir is wiped on start).
 
-Cookies expire when the site rotates your session; re-export or refresh them
-if login-walled downloads start failing again.
+Cookie support for login-walled sites was removed: those sites are not allowed sources.
+
+## 5. Tests
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest -q                       # offline unit tests
+LIVE=1 python -m pytest -q tests/test_live.py   # real downloads from Commons / archive.org
+```
+
+`SSRF_ALLOW_NETS` exists only for sandboxes whose DNS returns synthetic
+addresses (e.g. `198.18.0.0/15` behind a fake-IP proxy). Never set it in production.
 
 ## Deploy on Render (free)
 
@@ -105,7 +115,7 @@ This repo includes a `Dockerfile` (Python slim + FFmpeg + gunicorn) and a `rende
 
 1. In Render: **New > Blueprint**, connect this GitHub repo, and apply `render.yaml`
    (or **New > Web Service**, pick this repo, Runtime **Docker**, plan **Free**, health check path `/api/health`).
-2. Optional env vars: `MAX_FILESIZE_MB` (default 500, `0` = no limit), `JOB_TTL_SECONDS` (default 300).
+2. Optional env vars: `MAX_FILESIZE_MB` (default 500, `0` = no limit), `JOB_TTL_SECONDS` (default 300), `MAX_ACTIVE_JOBS` (default 2), `ALLOWED_DOMAINS`. If you previously set `COOKIES_CONTENT` on Render, delete it: it is no longer used.
 
 The server runs a single gunicorn worker with threads, because download jobs are tracked in memory.
 Free instances sleep when idle and have ephemeral disk, so finished files are only kept for a few minutes.

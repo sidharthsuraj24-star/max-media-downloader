@@ -457,8 +457,8 @@
   <div class="hero-bg"></div>
   <div class="hero-content">
     <div class="badge"><span class="badge-dot"></span> Free · No signup required</div>
-    <h1>Download anything.<br><span class="gradient-text">In any format.</span></h1>
-    <p class="subtitle">Paste a link from YouTube, Vimeo, Twitter, Instagram and more. Get video or audio — at the quality you choose.</p>
+    <h1>Download open media.<br><span class="gradient-text">In any format.</span></h1>
+    <p class="subtitle">Paste a link to openly licensed media on Wikimedia Commons or the Internet Archive. Get video or audio at the quality you choose.</p>
 
     <!-- MAIN CARD -->
     <div class="input-card">
@@ -467,7 +467,7 @@
           id="url-field"
           class="url-input"
           type="url"
-          placeholder="Paste a video or audio URL — YouTube, Vimeo, Twitter, TikTok…"
+          placeholder="Paste a Wikimedia Commons or archive.org link…"
           autocomplete="off"
         />
         <button class="analyze-btn" id="analyze-btn" onclick="analyzeURL()">
@@ -486,54 +486,9 @@
           </select>
         </div>
 
-        <div class="option-group" id="quality-group">
-          <span class="option-label">Quality</span>
-          <select class="select-styled" id="dl-quality">
-            <option value="best">Best available</option>
-            <option value="1080p">1080p</option>
-            <option value="720p">720p</option>
-            <option value="480p">480p</option>
-            <option value="360p">360p</option>
-          </select>
-        </div>
-
-        <div class="option-group" id="format-group">
-          <span class="option-label">Format</span>
-          <select class="select-styled" id="dl-format">
-            <option value="mp4">MP4</option>
-            <option value="webm">WebM</option>
-            <option value="mkv">MKV</option>
-          </select>
-        </div>
-
-        <div class="option-group" id="audio-format-group" style="display:none">
-          <span class="option-label">Audio Format</span>
-          <select class="select-styled" id="dl-audio-format">
-            <option value="mp3">MP3</option>
-            <option value="aac">AAC</option>
-            <option value="flac">FLAC</option>
-            <option value="wav">WAV</option>
-            <option value="ogg">OGG</option>
-            <option value="m4a">M4A</option>
-          </select>
-        </div>
-
-        <div class="option-group" id="audio-quality-group" style="display:none">
-          <span class="option-label">Bitrate</span>
-          <select class="select-styled" id="dl-audio-quality">
-            <option value="320">320 kbps</option>
-            <option value="256">256 kbps</option>
-            <option value="192">192 kbps</option>
-            <option value="128">128 kbps</option>
-          </select>
-        </div>
-
         <div class="option-group">
-          <span class="option-label">Subtitles</span>
-          <div class="toggle-group" id="subs-toggle" onclick="this.classList.toggle('active')">
-            <div class="toggle-switch"></div>
-            Include subs
-          </div>
+          <span class="option-label">Licence</span>
+          <span class="option-label" style="text-transform:none" id="policy-note">Only openly licensed sources. YouTube, X, Instagram, TikTok and Facebook are not supported.</span>
         </div>
       </div>
 
@@ -562,17 +517,9 @@
 
     <!-- Supported sites -->
     <div class="sites-section">
-      <span class="sites-label">Works with</span>
-      <span class="site-pill">YouTube</span>
-      <span class="site-pill">Vimeo</span>
-      <span class="site-pill">Twitter / X</span>
-      <span class="site-pill">Instagram</span>
-      <span class="site-pill">TikTok</span>
-      <span class="site-pill">Facebook</span>
-      <span class="site-pill">Dailymotion</span>
-      <span class="site-pill">Twitch</span>
-      <span class="site-pill">SoundCloud</span>
-      <span class="site-pill">+1000 more</span>
+      <span class="sites-label">Sources</span>
+      <span class="site-pill">Wikimedia Commons</span>
+      <span class="site-pill">Internet Archive (CC / public domain)</span>
     </div>
   </div>
 </section>
@@ -582,7 +529,7 @@
   <div class="how-inner">
     <div class="section-eyebrow">Process</div>
     <h2 class="section-title">Three steps, done.</h2>
-    <p class="section-sub">No software to install. No account to create. Just paste and download.</p>
+    <p class="section-sub">No software to install. No account to create. Just paste an openly licensed link.</p>
     <div class="steps-row">
       <div class="step">
         <div class="step-num">1</div>
@@ -597,7 +544,7 @@
       <div class="step">
         <div class="step-num">3</div>
         <h3>Download</h3>
-        <p>Hit download and your file starts immediately. No waiting, no queue.</p>
+        <p>Hit download and save the file when it is ready.</p>
       </div>
     </div>
   </div>
@@ -612,32 +559,32 @@
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(79,70,229,0.2)">🎬</div>
       <h3>Video Downloads</h3>
-      <p>Download in up to 4K quality. Supports MP4, WebM, and MKV containers — with or without subtitles.</p>
+      <p>Pick from every real stream the source offers, in its original container (MP4, WebM, OGV and more).</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(0,212,255,0.12)">🎵</div>
       <h3>Audio Extraction</h3>
-      <p>Pull audio from any video URL. Choose MP3, FLAC, AAC, WAV, OGG, or M4A — at up to 320 kbps.</p>
+      <p>Grab the original audio track, or convert it to MP3, AAC, FLAC, WAV or M4A.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(16,185,129,0.15)">🔄</div>
       <h3>Video → Audio Conversion</h3>
-      <p>Upload or link a video and convert it to high-quality audio in seconds. Perfect for podcasts and music.</p>
+      <p>Link a video and convert its soundtrack to audio. Handy for public-domain recordings and lectures.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(245,158,11,0.15)">⚡</div>
       <h3>Fast Processing</h3>
-      <p>Parallel downloads with smart quality detection. Most files are ready in under 10 seconds.</p>
+      <p>Small files are ready in seconds. Large files are capped so the free server stays responsive.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(239,68,68,0.12)">🔒</div>
       <h3>Private &amp; Secure</h3>
-      <p>Files are processed server-side and deleted immediately after. We never store your downloads or URLs.</p>
+      <p>Files are processed server-side and deleted a few minutes after they are ready.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(167,139,250,0.15)">🌐</div>
-      <h3>1000+ Sites Supported</h3>
-      <p>Powered by a comprehensive media backend that handles virtually every major video and audio platform.</p>
+      <h3>Licence-checked sources</h3>
+      <p>Internet Archive items are only allowed when they carry a Creative Commons or public-domain licence.</p>
     </div>
   </div>
 </section>
@@ -705,7 +652,7 @@
     <div class="logo-icon" style="width:26px;height:26px;font-size:0.7rem">⬇</div>
     Max<span>Media</span>
   </a>
-  <span class="footer-note">For personal use only. Respect copyright and platform terms of service.</span>
+  <span class="footer-note">Only openly licensed media. Credit the author as the licence requires.</span>
   <span style="color:var(--muted); font-size:0.78rem">© 2026 MaxMedia</span>
 </footer>
 
@@ -715,20 +662,6 @@
 <script>
   /* ── Type / format toggle logic ── */
   function onTypeChange() {
-    const type = document.getElementById('dl-type').value;
-    const qg   = document.getElementById('quality-group');
-    const fg   = document.getElementById('format-group');
-    const afg  = document.getElementById('audio-format-group');
-    const aqg  = document.getElementById('audio-quality-group');
-
-    if (type === 'video') {
-      qg.style.display = ''; fg.style.display = '';
-      afg.style.display = 'none'; aqg.style.display = 'none';
-    } else {
-      qg.style.display = 'none'; fg.style.display = 'none';
-      afg.style.display = ''; aqg.style.display = '';
-    }
-
     if (_lastMeta) renderResults(_lastMeta);
   }
 
@@ -738,7 +671,8 @@
     const el = document.createElement('div');
     el.className = `toast ${type}`;
     const icons = { success: '✓', error: '✕', info: 'ℹ' };
-    el.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+    const ic = document.createElement('span'); ic.textContent = icons[type];
+    el.appendChild(ic); el.appendChild(document.createTextNode(' ' + msg));
     wrap.appendChild(el);
     setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 3500);
   }
@@ -751,13 +685,8 @@
 
   function detectPlatform(url) {
     const map = [
-      ['youtube.com', 'YouTube'], ['youtu.be', 'YouTube'],
-      ['vimeo.com', 'Vimeo'], ['twitter.com', 'Twitter'], ['x.com', 'X (Twitter)'],
-      ['instagram.com', 'Instagram'], ['tiktok.com', 'TikTok'],
-      ['facebook.com', 'Facebook'], ['fb.watch', 'Facebook'],
-      ['dailymotion.com', 'Dailymotion'], ['twitch.tv', 'Twitch'],
-      ['soundcloud.com', 'SoundCloud'], ['reddit.com', 'Reddit'],
-      ['bilibili.com', 'Bilibili'],
+      ['commons.wikimedia.org', 'Wikimedia Commons'], ['upload.wikimedia.org', 'Wikimedia Commons'],
+      ['archive.org', 'Internet Archive'],
     ];
     for (const [domain, name] of map) { if (url.includes(domain)) return name; }
     return 'Web';
@@ -767,7 +696,7 @@
      REAL BACKEND INTEGRATION — connects to Flask API on /api/*
      ══════════════════════════════════════════════════════════════════ */
 
-  const API_BASE = '';   // same-origin; change to 'http://localhost:5000' if needed
+  const API_BASE = '';   // same-origin
 
   let _lastMeta = null;
 
@@ -784,6 +713,12 @@
     }
     if (!res.ok) throw new Error(data.error || fallbackMsg || `Request failed (${res.status})`);
     return data;
+  }
+
+  function licenceLabel(l) {
+    if (/publicdomain|zero/i.test(l)) return 'Public domain';
+    const m = l.match(/licenses\/([a-z-]+)\/?([0-9.]*)/i);
+    return m ? ('CC ' + m[1].toUpperCase() + (m[2] ? ' ' + m[2] : '')) : l;
   }
 
   /* ── Render results from real API data ── */
@@ -805,7 +740,7 @@
         quality:       s.quality || 'best',
         format:        s.fmt,
         audio_format:  s.fmt,
-        audio_quality: (s.quality || '192').replace('kbps',''),
+        audio_quality: s.quality === 'lossless' ? '0' : (s.quality || '192').replace('kbps',''),
         format_id:     s.format_id || '',
         has_audio:     !!s.has_audio,
       };
@@ -821,6 +756,7 @@
               <span class="tag">${escHtml(s.size)}</span>
               <span class="tag">${escHtml(meta.duration)}</span>
               <span class="tag green">${escHtml(meta.platform)}</span>
+              ${meta.license ? `<span class="tag" title="${escHtml(meta.license)}">${escHtml(licenceLabel(meta.license))}</span>` : ''}
             </div>
           </div>
           <div style="flex-shrink:0">
@@ -833,13 +769,15 @@
         </div>`;
     }).join('');
 
+    const emptyHTML = visibleStreams.length ? '' :
+      `<div class="result-item"><div class="result-meta"><div class="result-title">No ${selectedType === 'convert' ? 'conversion' : selectedType} streams for this file. Try another Type.</div></div></div>`;
     area.innerHTML = `
       <div style="margin-bottom:0.75rem;font-size:0.82rem;color:var(--muted)">
         Found <strong style="color:var(--white)">${visibleStreams.length}</strong>
         stream${visibleStreams.length !== 1 ? 's' : ''} ${meta.uploader ? '· <em style="font-style:normal">' + escHtml(meta.uploader) + '</em>' : ''}
       </div>
       ${meta.thumbnail ? `<div style="margin-bottom:1rem"><img src="${escHtml(meta.thumbnail)}" style="max-height:160px;border-radius:10px;object-fit:cover"></div>` : ''}
-      ${streamsHTML}`;
+      ${streamsHTML}${emptyHTML}`;
     area.style.display = 'block';
   }
 
